@@ -19,10 +19,13 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Get Board Configs
         uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: |
+          docker build -t sophgo-sg200x-debian:master -f ./scripts/Dockerfile .
       - name: Build Images
         uses: addnab/docker-run-action@v3
         with:
-          image: ghcr.io/fishwaldo/sophgo-sg200x-debian:master
+          image: sophgo-sg200x-debian:master
           options: --privileged -v ${{ github.workspace }}/images/:/output -v ${{ github.workspace }}/configs/:/configs/
           run: |
             make BOARD=${{ matrix.boards }} STORAGE_TYPE=${{ matrix.storage }} image
